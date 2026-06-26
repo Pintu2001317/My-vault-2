@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>myVault Pro v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;background:#0b1220;color:#e5e7eb}
+.header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;background:#111827;border-bottom:1px solid #1f2937;position:sticky;top:0}
+.logo{font-size:24px;font-weight:700}.logo span{color:#3b82f6}
+.wrap{padding:20px;max-width:1200px;margin:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.card{background:#111827;padding:18px;border-radius:14px;border:1px solid #1f2937}
+.card h3{margin:0;color:#9ca3af;font-size:14px}.card p{font-size:28px;margin:10px 0 0}
+.actions{margin:20px 0;display:flex;gap:10px;flex-wrap:wrap}
+button,input{border:none;border-radius:10px;padding:12px}
+button{background:#2563eb;color:#fff;cursor:pointer}
+.secondary{background:#1f2937}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.file{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:16px}
+.file .icon{font-size:42px}
+.file h4{overflow:hidden;text-overflow:ellipsis}
+.small{font-size:12px;color:#9ca3af}
+.progress{height:10px;background:#1f2937;border-radius:8px;overflow:hidden}
+.progress div{height:100%;width:35%;background:#2563eb}
+.modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center}
+.modalbox{background:#111827;padding:20px;border-radius:14px;width:min(500px,95vw)}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">my<span>Vault</span> Pro v2</div>
+<div>🔒 Secure Cloud Vault</div>
+</div>
+
+<div class="wrap">
+<div class="cards">
+<div class="card"><h3>Total Files</h3><p id="fc">0</p></div>
+<div class="card"><h3>Google Drive Links</h3><p id="gc">0</p></div>
+<div class="card"><h3>Storage Used</h3><p>2.4GB</p></div>
+<div class="card"><h3>Security</h3><p>100%</p></div>
+</div>
+
+<div class="card" style="margin:20px 0">
+<h3>Storage Usage</h3>
+<div class="progress"><div></div></div>
+<p class="small">2.4GB of 15GB used</p>
+</div>
+
+<div class="actions">
+<input type="file" id="upload" multiple hidden>
+<button onclick="upload.click()">📤 Upload Files</button>
+<button class="secondary" onclick="openDrive()">📎 Add Google Drive PDF</button>
+</div>
+
+<div class="files" id="files"></div>
+</div>
+
+<div class="modal" id="drive">
+<div class="modalbox">
+<h3>Add Google Drive PDF</h3>
+<input id="name" placeholder="File name" style="width:100%;margin:8px 0">
+<input id="url" placeholder="Paste Google Drive share link" style="width:100%;margin:8px 0">
+<button onclick="saveDrive()">Save</button>
+<button class="secondary" onclick="closeDrive()">Cancel</button>
+</div>
+</div>
+
+<script>
+let files=[];
+
+upload.onchange=e=>{
+ [...e.target.files].forEach(f=>{
+   const obj={name:f.name,type:f.type,url:URL.createObjectURL(f),drive:false};
+   files.push(obj);
+ });
+ render();
+}
+
+function openDrive(){drive.style.display='flex'}
+function closeDrive(){drive.style.display='none'}
+
+function saveDrive(){
+ const n=name.value.trim(),u=url.value.trim();
+ if(!n||!u)return alert("Enter file name and link");
+ let m=u.match(/\/d\/([^\/]+)/);
+ let preview=m?`https://drive.google.com/file/d/${m[1]}/preview`:u;
+ let download=m?`https://drive.google.com/uc?export=download&id=${m[1]}`:u;
+ files.push({name:n,url:preview,download,drive:true});
+ closeDrive(); name.value=''; url.value=''; render();
+}
+
+function downloadFile(f){
+ if(f.drive) window.open(f.download||f.url);
+ else{
+   const a=document.createElement('a');
+   a.href=f.url;a.download=f.name;
+   document.body.appendChild(a);a.click();a.remove();
+ }
+}
+
+function render(){
+ fc.textContent=files.length;
+ gc.textContent=files.filter(f=>f.drive).length;
+ filesDiv=files.map((f,i)=>`
+ <div class=file>
+ <div class=icon>${f.drive?'📄':'🖼️'}</div>
+ <h4>${f.name}</h4>
+ <div class=small>${f.drive?'Google Drive PDF':'Local Upload'}</div><br>
+ <button onclick="window.open('${f.url}','_blank')">👁 View</button>
+ <button class=secondary onclick="downloadFile(files[${i}])">⬇ Download</button>
+ </div>`).join('');
+ document.getElementById('files').innerHTML=filesDiv;
+}
+</script>
+</body>
+</html>
