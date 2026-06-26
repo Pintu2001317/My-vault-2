@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>myVault Pro v2</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0b1220;color:#e5e7eb}
+header{background:#111827;padding:16px 24px;font-size:24px;font-weight:bold}
+header span{color:#3b82f6}
+main{max-width:1000px;margin:auto;padding:20px}
+.card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:16px;margin-bottom:16px}
+button{background:#2563eb;color:white;border:none;border-radius:8px;padding:10px 16px}
+code{display:block;background:#0f172a;padding:10px;border-radius:8px;overflow:auto}
+</style>
+</head>
+<body>
+<header>my<span>Vault</span> Pro v2</header>
+<main>
+<div class="card">
+<h2>Connected Configuration</h2>
+<p>This file preserves the credentials from your current project.</p>
+<code>
+Firebase project: myvault-e364a
+Cloudinary cloud: dqvwgee2d
+Upload preset: Myvault
+Collections: files, folders
+</code>
+</div>
+<div class="card">
+<h2>Status</h2>
+<p>This is a starter v2 shell preserving your existing backend identifiers. Replace your current index.html only after testing.</p>
+<button onclick="alert('UI shell loaded successfully')">Test UI</button>
+</div>
+<script type="module">
+const firebaseConfig={
+ apiKey:"AIzaSyBNRD71tX9HKC9j7uhwKd-coysLk1STIys",
+ authDomain:"myvault-e364a.firebaseapp.com",
+ projectId:"myvault-e364a",
+ storageBucket:"myvault-e364a.firebasestorage.app",
+ messagingSenderId:"984257978494",
+ appId:"1:984257978494:web:7dad8100558d5209bd382f"
+};
+const CLOUD_NAME="dqvwgee2d";
+const UPLOAD_PRESET="Myvault";
+console.log(firebaseConfig,CLOUD_NAME,UPLOAD_PRESET);
+</script>
+</main>
+</body>
+</html>
